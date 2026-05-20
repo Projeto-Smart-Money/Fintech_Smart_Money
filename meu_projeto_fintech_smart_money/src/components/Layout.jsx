@@ -1,5 +1,5 @@
-import { NavLink, Outlet } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext.jsx';
+import { NavLink, Outlet } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext.jsx";
 
 export default function Layout() {
   const { user, logout } = useAuth();
@@ -15,31 +15,60 @@ export default function Layout() {
         <i className="bi bi-list" />
       </button>
 
-      <aside className="offcanvas offcanvas-start text-bg-dark" id="menuLateral">
+      <aside
+        className="offcanvas offcanvas-start text-bg-dark"
+        id="menuLateral"
+      >
         <div className="offcanvas-header">
           <h5 className="offcanvas-title">Smart-Money</h5>
-          <button className="btn-close btn-close-white" data-bs-dismiss="offcanvas" />
+          <button
+            className="btn-close btn-close-white"
+            data-bs-dismiss="offcanvas"
+          />
         </div>
         <div className="offcanvas-body">
           <p>Menu do Usuário</p>
           <nav className="d-grid gap-2">
-            <NavLink className="btn btn-light" to="/">
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "btn btn-light" : "btn btn-outline-light"
+              }
+              to="/"
+            >
               Dashboard
             </NavLink>
-            <NavLink className="btn btn-outline-light" to="/rendas">
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "btn btn-light" : "btn btn-outline-light"
+              }
+              to="/rendas"
+            >
               Rendas
             </NavLink>
-            <NavLink className="btn btn-outline-light" to="/despesas">
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "btn btn-light" : "btn btn-outline-light"
+              }
+              to="/despesas"
+            >
               Despesas
             </NavLink>
-            <NavLink className="btn btn-outline-light" to="/metas">
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "btn btn-light" : "btn btn-outline-light"
+              }
+              to="/metas"
+            >
               Metas
             </NavLink>
           </nav>
           <div className="sidebar-user mt-4">
             <small className="text-white-50 d-block">Conectado como</small>
             <strong>{user?.name}</strong>
-            <button className="btn btn-sm btn-outline-light w-100 mt-3" onClick={logout}>
+            <button
+              className="btn btn-sm btn-outline-light w-100 mt-3"
+              onClick={logout}
+            >
               Sair
             </button>
           </div>
