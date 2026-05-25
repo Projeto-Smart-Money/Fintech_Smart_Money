@@ -2,7 +2,7 @@
   "name": "smart-money-react",
   "private": true,
   "version": "1.0.0",
-  "homepage": "https://jnovaess.github.io/Projeto-Fintech",
+  "homepage": "https://projeto-smart-money.github.io/Fintech_Smart_Money/",
   "type": "module",
   "scripts": {
     "dev": "vite",
