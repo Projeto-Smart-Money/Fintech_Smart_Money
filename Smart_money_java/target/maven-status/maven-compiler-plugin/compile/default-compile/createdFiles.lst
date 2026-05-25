@@ -1,0 +1,8 @@
+com\example\fintechbackend\FintechBackendApplication.class
+com\example\fintechbackend\repository\MetaRepository.class
+com\example\fintechbackend\model\Metas.class
+com\example\fintechbackend\repository\DespesaRepository.class
+com\example\fintechbackend\controller\RendaController.class
+com\example\fintechbackend\model\Despesa.class
+com\example\fintechbackend\model\Rendas.class
+com\example\fintechbackend\repository\RendaRepository.class
