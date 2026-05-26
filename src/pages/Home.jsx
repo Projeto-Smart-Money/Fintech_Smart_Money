@@ -17,17 +17,17 @@ export default function Home() {
       <div className="home-hero-panel">
         <div>
           <p className="section-kicker mb-2">Smart-Money</p>
-          <h1>Olá, {user?.name}</h1>
+          <h1>Ola, {user?.name}</h1>
           <p>
-            Veja um resumo simples das suas entradas e saídas. Depois, use as telas de rendas e despesas
+            Veja um resumo simples das suas entradas e saidas. Depois, use as telas de rendas e despesas
             para cadastrar, editar ou excluir registros.
           </p>
         </div>
 
         <div className="home-balance-card">
-          <span>Saldo disponível</span>
+          <span>Saldo disponivel</span>
           <strong>{formatCurrency(balance)}</strong>
-          <small>Dados temporários até conectar o backend</small>
+          <small>Resumo demonstrativo. Gerencie os registros nas telas internas.</small>
         </div>
       </div>
 
@@ -64,13 +64,13 @@ export default function Home() {
         <div className="home-panel-header">
           <div>
             <span>Atividade recente</span>
-            <h2>Últimos registros</h2>
+            <h2>Ultimos registros</h2>
           </div>
         </div>
 
         <div className="home-activity-list">
           {recentItems.map((item) => (
-            <div className="home-activity-item" key={`${item.title}-${item.date}`}>
+            <div className="home-activity-item" key={`${item.id}-${item.title}-${item.date}`}>
               <i className="bi bi-credit-card" />
               <div>
                 <strong>{item.title}</strong>

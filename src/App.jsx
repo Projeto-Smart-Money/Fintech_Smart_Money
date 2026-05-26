@@ -19,15 +19,15 @@ export default function App() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
 
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/dashboard" element={<Navigate to="/" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/rendas" element={<IncomePage />} />
             <Route path="/despesas" element={<ExpensePage />} />
             <Route path="/metas" element={<GoalPage />} />
-            <Route path="/home" element={<Navigate to="/" replace />} />
+            <Route path="/home" element={<Navigate to="/dashboard" replace />} />
           </Route>
         </Route>
 

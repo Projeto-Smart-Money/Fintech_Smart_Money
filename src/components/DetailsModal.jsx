@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { formatCurrency, sumTransactions } from '../utils/currency.js';
 
 export default function DetailsModal({ incomes, expenses, goals }) {
+  const navigate = useNavigate();
   const totalIncome = sumTransactions(incomes);
   const totalExpense = sumTransactions(expenses);
   const balance = totalIncome - totalExpense;
@@ -27,6 +28,29 @@ export default function DetailsModal({ incomes, expenses, goals }) {
     },
   ];
 
+  function closeModal() {
+    const modalElement = document.getElementById('detalhesModal');
+    const bootstrapModal = window.bootstrap?.Modal?.getInstance(modalElement);
+
+    if (bootstrapModal) {
+      bootstrapModal.hide();
+    }
+
+    modalElement?.classList.remove('show');
+    modalElement?.setAttribute('aria-hidden', 'true');
+    modalElement?.removeAttribute('aria-modal');
+    modalElement?.removeAttribute('role');
+    document.body.classList.remove('modal-open');
+    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('padding-right');
+    document.querySelectorAll('.modal-backdrop').forEach((backdrop) => backdrop.remove());
+  }
+
+  function handleOpenSection(path) {
+    closeModal();
+    navigate(path);
+  }
+
   return (
     <div className="modal fade" id="detalhesModal" tabIndex="-1">
       <div className="modal-dialog modal-dialog-centered">
@@ -41,7 +65,7 @@ export default function DetailsModal({ incomes, expenses, goals }) {
 
           <div className="modal-body details-modal-body">
             <div className="details-balance">
-              <span>Saldo disponível</span>
+              <span>Saldo disponivel</span>
               <strong>{formatCurrency(balance)}</strong>
             </div>
 
@@ -54,9 +78,9 @@ export default function DetailsModal({ incomes, expenses, goals }) {
                   </div>
                   <div className="details-simple-action">
                     <em>{section.value}</em>
-                    <Link to={section.to} data-bs-dismiss="modal">
+                    <button type="button" onClick={() => handleOpenSection(section.to)}>
                       Abrir
-                    </Link>
+                    </button>
                   </div>
                 </div>
               ))}

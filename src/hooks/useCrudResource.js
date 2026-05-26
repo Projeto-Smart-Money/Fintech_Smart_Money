@@ -19,7 +19,7 @@ export function useCrudResource(endpoint, fallbackItems) {
       } catch {
         if (isMounted) {
           setItems(fallbackItems);
-          setError('API indisponível. Exibindo dados locais temporários.');
+          setError('API indisponivel. Exibindo dados locais temporarios.');
         }
       } finally {
         if (isMounted) {
@@ -41,9 +41,10 @@ export function useCrudResource(endpoint, fallbackItems) {
     try {
       const createdItem = await apiClient.create(endpoint, data);
       setItems((currentItems) => [createdItem, ...currentItems]);
+      setError('');
     } catch {
       setItems((currentItems) => [localItem, ...currentItems]);
-      setError('Item criado localmente. Configure a API para persistir no banco.');
+      setError('Salvo apenas nesta tela. Para gravar no banco, inicie/configure a API.');
     }
   }
 
@@ -53,19 +54,21 @@ export function useCrudResource(endpoint, fallbackItems) {
       setItems((currentItems) =>
         currentItems.map((item) => (item.id === id ? updatedItem : item)),
       );
+      setError('');
     } catch {
       setItems((currentItems) =>
         currentItems.map((item) => (item.id === id ? { ...item, ...data } : item)),
       );
-      setError('Item atualizado localmente. Configure a API para persistir no banco.');
+      setError('Atualizado apenas nesta tela. Para gravar no banco, inicie/configure a API.');
     }
   }
 
   async function deleteItem(id) {
     try {
       await apiClient.remove(endpoint, id);
+      setError('');
     } catch {
-      setError('Item removido localmente. Configure a API para persistir no banco.');
+      setError('Removido apenas desta tela. Para gravar no banco, inicie/configure a API.');
     } finally {
       setItems((currentItems) => currentItems.filter((item) => item.id !== id));
     }

@@ -1,7 +1,40 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
-// Ponto central de integração com o backend.
-// Se os controllers usarem outros nomes de rota, ajuste os endpoints nas páginas.
+function normalizeAmount(amount) {
+  const numericAmount = Number(amount);
+  return Number.isFinite(numericAmount) ? numericAmount : 0;
+}
+
+function toFrontendItem(item) {
+  if (!item || typeof item !== 'object') {
+    return item;
+  }
+
+  return {
+    ...item,
+    amount: normalizeAmount(item.amount),
+    date: item.date || item.transactionDate,
+  };
+}
+
+function toBackendItem(item) {
+  if (!item || typeof item !== 'object') {
+    return item;
+  }
+
+  const { date, ...backendItem } = item;
+
+  return {
+    ...backendItem,
+    amount: normalizeAmount(backendItem.amount),
+    transactionDate: date,
+  };
+}
+
+function normalizeResponse(data) {
+  return Array.isArray(data) ? data.map(toFrontendItem) : toFrontendItem(data);
+}
+
 async function request(path, options = {}) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: {
@@ -19,7 +52,7 @@ async function request(path, options = {}) {
     return null;
   }
 
-  return response.json();
+  return normalizeResponse(await response.json());
 }
 
 export const apiClient = {
@@ -27,12 +60,12 @@ export const apiClient = {
   create: (path, data) =>
     request(path, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify(toBackendItem(data)),
     }),
   update: (path, id, data) =>
     request(`${path}/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(data),
+      body: JSON.stringify(toBackendItem(data)),
     }),
   remove: (path, id) =>
     request(`${path}/${id}`, {

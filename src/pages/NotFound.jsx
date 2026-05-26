@@ -9,7 +9,7 @@ export default function NotFound() {
         <p className="text-white-50">
           A rota acessada não existe no frontend da aplicação.
         </p>
-        <Link className="btn btn-gray px-4 fw-bold rounded-pill" to="/">
+        <Link className="btn btn-gray px-4 fw-bold rounded-pill" to="/login">
           Voltar para o início
         </Link>
       </section>

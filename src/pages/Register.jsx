@@ -15,7 +15,7 @@ export default function Register() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   async function handleSubmit(event) {
@@ -34,7 +34,7 @@ export default function Register() {
       password: account.password,
     });
     setIsSubmitting(false);
-    navigate('/', { replace: true });
+    navigate('/dashboard', { replace: true });
   }
 
   function handleChange(event) {

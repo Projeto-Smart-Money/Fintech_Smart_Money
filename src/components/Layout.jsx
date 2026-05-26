@@ -4,6 +4,15 @@ import { useAuth } from "../contexts/AuthContext.jsx";
 export default function Layout() {
   const { user, logout } = useAuth();
 
+  function closeMenu() {
+    const menuElement = document.getElementById("menuLateral");
+    const offcanvas = window.bootstrap?.Offcanvas?.getInstance(menuElement);
+
+    if (offcanvas) {
+      offcanvas.hide();
+    }
+  }
+
   return (
     <>
       <button
@@ -29,16 +38,16 @@ export default function Layout() {
         <div className="offcanvas-body">
           <p>Menu do Usuário</p>
           <nav className="d-grid gap-2">
-            <NavLink className="btn btn-light" to="/">
+            <NavLink className="btn btn-light" to="/dashboard" onClick={closeMenu}>
               Dashboard
             </NavLink>
-            <NavLink className="btn btn-outline-light" to="/rendas">
+            <NavLink className="btn btn-outline-light" to="/rendas" onClick={closeMenu}>
               Rendas
             </NavLink>
-            <NavLink className="btn btn-outline-light" to="/despesas">
+            <NavLink className="btn btn-outline-light" to="/despesas" onClick={closeMenu}>
               Despesas
             </NavLink>
-            <NavLink className="btn btn-outline-light" to="/metas">
+            <NavLink className="btn btn-outline-light" to="/metas" onClick={closeMenu}>
               Metas
             </NavLink>
           </nav>

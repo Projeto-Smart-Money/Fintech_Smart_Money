@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 
 export default function Login() {
-  const { user, login } = useAuth();
+  const { login } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
@@ -12,16 +12,12 @@ export default function Login() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (user) {
-    return <Navigate to="/" replace />;
-  }
-
   async function handleSubmit(event) {
     event.preventDefault();
     setIsSubmitting(true);
     await login(credentials);
     setIsSubmitting(false);
-    navigate(location.state?.from?.pathname || '/', { replace: true });
+    navigate(location.state?.from?.pathname || '/dashboard', { replace: true });
   }
 
   function handleChange(event) {

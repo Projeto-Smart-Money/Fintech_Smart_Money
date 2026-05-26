@@ -1,38 +1,102 @@
+import { useState } from 'react';
 import TransactionCard from './TransactionCard.jsx';
 import { useCrudResource } from '../hooks/useCrudResource.js';
-import { formatCurrency, sumTransactions } from '../utils/currency.js';
+import { formatCurrency, parseCurrencyInput, sumTransactions } from '../utils/currency.js';
 
 export default function TransactionPage({ title, subtitle, addLabel, variant, initialItems, endpoint }) {
   const { items, isLoading, error, createItem, updateItem, deleteItem } = useCrudResource(
     endpoint,
     initialItems,
   );
+  const [modalMode, setModalMode] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    amount: '',
+    category: '',
+    date: new Date().toISOString().slice(0, 10),
+  });
+
+  const defaultTitleByVariant = {
+    income: 'Nova renda',
+    expense: 'Nova despesa',
+    goal: 'Nova meta',
+  };
+
+  const descriptionByVariant = {
+    income: 'Entrada financeira cadastrada',
+    expense: 'Despesa cadastrada',
+    goal: 'Objetivo financeiro cadastrado',
+  };
+
+  const modalTitle = modalMode === 'edit' ? 'Editar item' : addLabel;
 
   function handleAdd() {
-    const nextItem = {
-      title: variant === 'income' ? 'Nova renda' : variant === 'expense' ? 'Nova despesa' : 'Nova meta',
-      description: 'Pronta para conectar com formulário ou API',
-      amount: 0,
+    setSelectedItem(null);
+    setFormData({
+      title: defaultTitleByVariant[variant],
+      description: descriptionByVariant[variant],
+      amount: '',
       category: 'Sem categoria',
       date: new Date().toISOString().slice(0, 10),
-    };
-
-    createItem(nextItem);
+    });
+    setModalMode('create');
   }
 
   function handleEdit(transaction) {
-    const newAmount = window.prompt('Informe o novo valor:', String(transaction.amount));
-    const parsedAmount = Number(newAmount);
-
-    if (!newAmount || Number.isNaN(parsedAmount)) {
-      return;
-    }
-
-    updateItem(transaction.id, { ...transaction, amount: parsedAmount });
+    setSelectedItem(transaction);
+    setFormData({
+      title: transaction.title,
+      description: transaction.description,
+      amount: String(transaction.amount),
+      category: transaction.category,
+      date: transaction.date,
+    });
+    setModalMode('edit');
   }
 
   function handleDelete(transactionId) {
     deleteItem(transactionId);
+  }
+
+  function handleCloseModal() {
+    setModalMode(null);
+    setSelectedItem(null);
+  }
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setFormData((currentData) => ({
+      ...currentData,
+      [name]: value,
+    }));
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    const parsedAmount = parseCurrencyInput(formData.amount);
+
+    if (!formData.title.trim() || Number.isNaN(parsedAmount) || parsedAmount <= 0) {
+      return;
+    }
+
+    const nextItem = {
+      title: formData.title.trim(),
+      description: formData.description.trim() || descriptionByVariant[variant],
+      amount: parsedAmount,
+      category: formData.category.trim() || 'Sem categoria',
+      date: formData.date || new Date().toISOString().slice(0, 10),
+    };
+
+    if (modalMode === 'edit' && selectedItem) {
+      updateItem(selectedItem.id, { ...selectedItem, ...nextItem });
+    } else {
+      createItem(nextItem);
+    }
+
+    handleCloseModal();
   }
 
   const total = sumTransactions(items);
@@ -69,6 +133,90 @@ export default function TransactionPage({ title, subtitle, addLabel, variant, in
           />
         ))}
       </div>
+
+      {modalMode && (
+        <div className="transaction-modal-backdrop" role="presentation">
+          <section className="transaction-modal" role="dialog" aria-modal="true" aria-labelledby="transaction-modal-title">
+            <div className="transaction-modal-header">
+              <div>
+                <span>{subtitle}</span>
+                <h2 id="transaction-modal-title">{modalTitle}</h2>
+              </div>
+              <button className="transaction-modal-close" type="button" onClick={handleCloseModal} aria-label="Fechar">
+                <i className="bi bi-x-lg" />
+              </button>
+            </div>
+
+            <form className="transaction-form" onSubmit={handleSubmit}>
+              <label>
+                <span>Titulo</span>
+                <input
+                  name="title"
+                  type="text"
+                  value={formData.title}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+
+              <label>
+                <span>Valor</span>
+                <div className="money-input">
+                  <small>R$</small>
+                  <input
+                    name="amount"
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0,00"
+                    value={formData.amount}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </label>
+
+              <label>
+                <span>Categoria</span>
+                <input
+                  name="category"
+                  type="text"
+                  value={formData.category}
+                  onChange={handleChange}
+                />
+              </label>
+
+              <label>
+                <span>Data</span>
+                <input
+                  name="date"
+                  type="date"
+                  value={formData.date}
+                  onChange={handleChange}
+                />
+              </label>
+
+              <label className="transaction-form-wide">
+                <span>Descricao</span>
+                <textarea
+                  name="description"
+                  rows="3"
+                  value={formData.description}
+                  onChange={handleChange}
+                />
+              </label>
+
+              <div className="transaction-modal-actions">
+                <button type="button" className="btn btn-outline-light" onClick={handleCloseModal}>
+                  Cancelar
+                </button>
+                <button type="submit" className="btn btn-gray fw-bold">
+                  Salvar
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
     </section>
   );
 }
