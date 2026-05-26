@@ -1,7 +1,7 @@
-package com.example.metas.controller;
+package com.example.fintechbackend.controller;
 
-import com.example.metas.model.Meta;
-import com.example.metas.repository.MetaRepository;
+import com.example.fintechbackend.model.Meta;
+import com.example.fintechbackend.repository.MetaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

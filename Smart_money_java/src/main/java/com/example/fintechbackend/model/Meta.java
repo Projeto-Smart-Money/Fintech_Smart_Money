@@ -1,4 +1,4 @@
-package com.example.metas.model;
+package com.example.fintechbackend.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;

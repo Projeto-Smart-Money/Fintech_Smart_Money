@@ -1,7 +1,7 @@
-package com.example.despesas.controller;
+package com.example.fintechbackend.controller;
 
-import com.example.despesas.model.Despesas;
-import com.example.despesas.repository.DespesaRepository;
+import com.example.fintechbackend.model.Despesas;
+import com.example.fintechbackend.repository.DespesaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional; // Import essencial
 import org.springframework.web.bind.annotation.*;

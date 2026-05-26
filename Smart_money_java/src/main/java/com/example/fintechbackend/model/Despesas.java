@@ -1,4 +1,4 @@
-package com.example.despesas.model;
+package com.example.fintechbackend.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
